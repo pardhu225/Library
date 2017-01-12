@@ -1,0 +1,38 @@
+
+/**
+ * 	The styles for the entire website.
+ *  All styles created and inspected by Ambati Doleswara Madhava(160098).
+ */
+#wrapper {
+	border-style:none;
+	border-width:2px;
+	border-color:blue;
+	border-radius:7px;
+	box-shadow:10px 10px 5px gray;
+	margin-top:200px;
+	width:30%;
+	padding-top:10px;
+	padding-bottom:20px;
+	font-family:arial;
+}
+
+.submitButton {
+	font-size:20px;
+	font-family:"Book Antiqua";
+	background-color:blue;
+	color:white;
+	border-radius:5px;
+	padding-right:90px;
+	padding-left:90px;
+	border:none;
+}
+
+.inputItem {
+	padding:2px;
+	font-family:"Comic Sans MS"
+}
+
+.textInput {
+	border-radius:3px;
+	border:solid gray 2px;
+}
