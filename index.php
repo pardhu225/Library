@@ -36,7 +36,7 @@ function displayMsg()
 			<div id="wrapper">
 				<?php displayMsg(); ?>
 				<h3>Enter the login credentials:</h3>
-				<form action="processTraffic.php" method="post">
+				<form action="processlogin.php" method="post">
 					<div class="inputItem">Username : <input type="text" class="textInput" name="username"></div>
 					<div class="inputItem">Password : <input type="password" class="textInput" name="password"></div>
 					<div class="inputItem"><input type="submit" value="LOGIN" class="submitButton"></div>
