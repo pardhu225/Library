@@ -3,6 +3,7 @@
  * Check if the login status is true.
  * If it isnt then redirect user to the index page
  */
+ session_start();
 function redir_if_not_login()
 {
 	if(!isset($_SESSION['loginstatus']) || !$_SESSION['loginstatus'])
@@ -44,28 +45,66 @@ function user_type()
 
 /**
  * Returns a html string containing style and required message
- * provided the status of the book
+ * provided the status of the book.
+ * To optimize the performance you will have to provide the 
+ * connection object also.
  */
-function style_it($due)
+function style_it($row,$conn)
 {
-	$status = get_status($due);
-	if($status===1){
+	if(!$row['returned'])
+	{
+		$status = get_status($row['date']);
+		if($status===1){
+			?>
+			<tr style="background-color:rgb(200,100,100);">
+				<td onclick="showToast(<?php echo $row['transid'];?>)">
+					<?php echo get_book_attr($row['bookid'], "title", $conn);?>
+					<img src="img/fined.jpg" style="height:25px;width:25px;float:right;">
+				</td>
+				<td>
+					<?php echo $row['date']; ?>
+				</td>
+			</tr>
+			
+		<?php
+		} else if($status===2) {
+			?>
+			<tr style="background-color:rgb(100,255,255);">
+				<td onclick="showToast(<?php echo $row['transid'];?>)">
+					<?php echo get_book_attr($row['bookid'], "title", $conn);?>
+					<img src="img/renew.jpg" style="height:25px;width:25px;float:right;">
+				</td>
+				<td>
+					<?php echo $row['date']; ?>
+				</td>
+			</tr>
+		<?php
+		} else if($status==3) {
+			?>
+			<tr style="background-color:rgb(100,255,100);">
+				<td onclick="showToast(<?php echo $row['transid'];?>)">
+					<?php echo get_book_attr($row['bookid'], "title", $conn);?>
+					<img src="img/okay.jpg" style="height:25px;width:25px;float:right;">
+				</td>
+				<td>
+					<?php echo $row['date']; ?>
+				</td>
+			</tr>
+			<?php
+		}
+	}else{
 		?>
-		<div style="background-color:rgb(200,100,100);">
-			<img src="img/fined.jpg" style="height:25px;width:25px;float:left;"> Fined!
-		</div>
-	<?php
-	} else if($status===2) {
-		?>
-		<div style="background-color:rgb(100,255,255);">
-			<img src="img/warning.jpg" style="height:25px;width:25px;float:left;"> Renew now!
-		</div>
-	<?php
-	} else if($status==3) {
-		?>
-		<div style="background-color:rgb(100,200,100);">
-			<img src="img/okay.jpg" style="height:25px;width:25px;float:left;"> Due: <?php echo $due;?>
-		</div>
+		<tr style="background-color:rgb(200,200,200);">
+			<td>
+				<a onclick="showToast(<?php echo $row['transid'];?>)">
+					<?php echo get_book_attr($row['bookid'], "title", $conn);?>
+				</a>
+				<img src="img/okay.jpg"style="height:25px;width:25px;float:right;">
+			</td>
+			<td>
+				<?php echo $row['date']; ?>
+			</td>
+		</tr>
 		<?php
 	}
 }
@@ -90,5 +129,17 @@ function get_status($due)
 		return 2;
 	else
 		return 3;
+}
+
+/**
+ * Returns the given attribute of the book as specified
+ * in the structure of table.
+ */
+function get_book_attr($id,$attr,$conn)
+{
+	$sql = "SELECT $attr FROM books where bookid=$id";
+	$res = $conn->query($sql);
+	$row = $res->fetch_array();
+	return $row[0];
 }
 ?>

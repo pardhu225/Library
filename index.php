@@ -42,7 +42,6 @@ function displayMsg()
 					<div class="inputItem"><input type="submit" value="LOGIN" class="submitButton"></div>
 				</form>
 			</div>
-			
 		</center>
 	</body>
 </html>

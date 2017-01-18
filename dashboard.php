@@ -12,6 +12,18 @@ if(!$conn)
 <html>
 	<head>
 		<title>Dashboard - Library</title>
+		<style>
+			#detailBox {
+				position: fixed;
+				z-index: 1;
+				width: 40%;
+				height: 200px;
+				border: solid 2px black;
+				left:200px;
+				top: 100px;
+				visibility: hidden;
+			}
+		</style>
 	</head>
 	<body>
 		<div style="height: 25px;">This is a clearing area for the navigation bar.</div>
@@ -21,35 +33,53 @@ if(!$conn)
 		</div>
 		<div id="main">
 			<?php
-			if($_SESSION['usertype']==1) :			//All the elements for a student
+			if($_SESSION['usertype']==1) :			//TODO Start the student GUI
 			?>
 			<div class="displayContainer">
-				<div class="tableLabel"></div>
+				<center>
+					<div id="detailBox"></div>
+				</center>
 				<table>
 					<tr>
 						<th>Book Title</th>
 						<th>Date of issue</th>
 					</tr>
 					<?php
-					$sql = 'SELECT bookTitle AS title, issueDate , transid FROM transactions WHERE userid="'.
+					$sql = 'SELECT * FROM transactions WHERE userid="'.
 									$_SESSION['userid'].'"';
 					$res = $conn->query($sql);
+					echo $conn->error;
 					if($res->num_rows===0)
-						echo "<tr colspan='2'>You havent taken any books yet</tr>";
+						echo "<tr><td colspan='2'>You havent taken any books yet</td></tr>";
 					else
 					{
-						echo '<tr>';
 						for($i=0;$i<$res->num_rows;$i++)
 						{
 							$row = $res->fetch_array(MYSQL_ASSOC);
-							echo '<td onclick="showToast(this, this.id)">'.$row['title'].'</td>';
-							echo '<td>'.style_it($row['duedate']).'</td>';
+							style_it($row,$conn);
 						}
 					}
+						
 					?>
 				</table>
 			</div>
-			<?php endif;?>
+			<?php endif;    // TODO end the student GUI?>
 		</div>
+		<script>
+			function showToast(id)
+			{
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if(this.status===200 && this.readyState===4)
+					{
+						document.getElementById("detailBox").innerHTML=this.responseText;
+						document.getElementById("detailBox").style.visibility="inherit";
+						setTimeout(function(){document.getElementById("detailBox").style.visibility="hidden";},3000);
+					}
+				};
+				xmlhttp.open("GET","info.php?transid="+id,true);
+				xmlhttp.send();
+			}
+		</script>
 	</body>
 </html>
