@@ -3,25 +3,28 @@ include('funct.php');
 redir_if_not_login();
 
 $conn = new mysqli("127.0.0.1","root","","library");
-if(!$conn)
-{
-	die("Couldn't connect to the core database.");
-}
+
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Dashboard - Library</title>
 		<style>
+			body {
+				font-family:"Comic Sans MS";
+			}
 			#detailBox {
-				position: fixed;
+				position: absolute;
 				z-index: 1;
-				width: 40%;
+				width: 38%;
+				padding:1%;
 				height: 200px;
-				border: solid 2px black;
-				left:200px;
-				top: 100px;
+				border: solid 2px gray;
 				visibility: hidden;
+				margin-left:30%;
+				background-color:#fff;
+				box-shadow: gray 0px 10px 30px;
+				border-radius: 10px;
 			}
 		</style>
 	</head>
@@ -36,15 +39,14 @@ if(!$conn)
 			if($_SESSION['usertype']==1) :			//TODO Start the student GUI
 			?>
 			<div class="displayContainer">
-				<center>
-					<div id="detailBox"></div>
-				</center>
+				<div id="detailBox"></div>
 				<table>
 					<tr>
 						<th>Book Title</th>
 						<th>Date of issue</th>
 					</tr>
 					<?php
+					
 					$sql = 'SELECT * FROM transactions WHERE userid="'.
 									$_SESSION['userid'].'"';
 					$res = $conn->query($sql);
